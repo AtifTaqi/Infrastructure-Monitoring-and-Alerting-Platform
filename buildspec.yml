@@ -1,0 +1,75 @@
+version: 0.2
+
+env:
+  variables:
+    TF_INPUT: 0
+    TF_VAR_env: $ENV
+    TF_IN_AUTOMATION: true
+    TF_VAR_enable_transit_gateway: false
+    TF_VAR_owner_email: pttp@justice.gov.uk
+    TF_VAR_enable_critical_notifications: true
+  parameter-store:
+    SHARED_SERVICES_ACCOUNT_ID: "/codebuild/staff_device_shared_services_account_id"
+    TF_VAR_production_account_id: "/codebuild/pttp-ci-ima-pipeline/production_account_id"
+    TF_VAR_assume_role: "/codebuild/pttp-ci-ima-pipeline/$ENV/assume_role"
+    TF_VAR_byoip_pool_id: "/staff-device/dns/$ENV/public_ip_pool_id"
+    TF_VAR_grafana_db_name: "/codebuild/pttp-ci-ima-pipeline/$ENV/grafana_db_name"
+    TF_VAR_grafana_db_endpoint: "/codebuild/pttp-ci-ima-pipeline/$ENV/grafana_db_endpoint"
+    TF_VAR_grafana_db_endpoint_v2: "/codebuild/pttp-ci-ima-pipeline/$ENV/grafana_db_endpoint_v2"
+    TF_VAR_grafana_db_username: "/codebuild/pttp-ci-ima-pipeline/$ENV/grafana_db_username"
+    TF_VAR_grafana_db_password: "/codebuild/pttp-ci-ima-pipeline/$ENV/grafana_db_password"
+    TF_VAR_grafana_url: "/codebuild/pttp-ci-datasource-config-pipeline/$ENV/grafana_url"
+    TF_VAR_grafana_admin_username: "/codebuild/pttp-ci-ima-pipeline/$ENV/grafana_admin_username"
+    TF_VAR_grafana_admin_password: "/codebuild/pttp-ci-ima-pipeline/$ENV/grafana_admin_password"
+    TF_VAR_ci_user_login: "/codebuild/pttp-ci-ima-pipeline/$ENV/ci_user_login"
+    TF_VAR_ci_user_password: "/codebuild/pttp-ci-ima-pipeline/$ENV/ci_user_password"
+    TF_VAR_vpn_hosted_zone_id: "/codebuild/pttp-ci-ima-pipeline/$ENV/vpn_hosted_zone_id"
+    TF_VAR_vpn_hosted_zone_domain: "/codebuild/pttp-ci-ima-pipeline/$ENV/vpn_hosted_zone_domain"
+    TF_VAR_smtp_user: "/codebuild/pttp-ci-ima-pipeline/$ENV/smtp_user"
+    TF_VAR_smtp_password: "/codebuild/pttp-ci-ima-pipeline/$ENV/smtp_password"
+    TF_VAR_domain_prefix: "/codebuild/pttp-ci-ima-pipeline/$ENV/domain_prefix"
+    TF_VAR_azure_ad_client_id: "/codebuild/pttp-ci-ima-pipeline/$ENV/azure_ad_client_id"
+    TF_VAR_azure_ad_client_secret: "/codebuild/pttp-ci-ima-pipeline/$ENV/azure_ad_client_secret"
+    TF_VAR_azure_ad_auth_url: "/codebuild/pttp-ci-ima-pipeline/$ENV/azure_ad_auth_url"
+    TF_VAR_azure_ad_token_url: "/codebuild/pttp-ci-ima-pipeline/$ENV/azure_ad_token_url"
+    TF_VAR_transit_gateway_id: "/codebuild/pttp-ci-ima-pipeline/$ENV/transit_gateway_id"
+    TF_VAR_transit_gateway_route_table_id: "/codebuild/pttp-ci-ima-pipeline/$ENV/transit_gateway_route_table_id"
+    TF_VAR_sns_subscribers: "/codebuild/pttp-ci-ima-pipeline/$ENV/sns_subscribers"
+    TF_VAR_thanos_image_repository_url: "/codebuild/pttp-ci-ima-pipeline/thanos_image_repository_url"
+    TF_VAR_cloudwatch_exporter_access_role_arns: "/codebuild/pttp-ci-ima-pipeline/$ENV/cloudwatch_exporter_access_role_arns"
+    TF_VAR_enable_test_bastion: "/codebuild/pttp-ci-ima-pipeline/$ENV/enable_test_bastion"
+    TF_VAR_enable_ima_dns_resolver: "/codebuild/pttp-ci-ima-pipeline/$ENV/enable_ima_dns_resolver"
+    TF_VAR_gsi_domain: "/codebuild/pttp-ci-ima-pipeline/$ENV/gsi_domain"
+    TF_VAR_mojo_dns_ip_1: "/codebuild/pttp-ci-ima-pipeline/$ENV/mojo_dns_ip_1"
+    TF_VAR_mojo_dns_ip_2: "/codebuild/pttp-ci-ima-pipeline/$ENV/mojo_dns_ip_2"
+    TF_VAR_dom1_dns_range_1: "/codebuild/pttp-ci-ima-pipeline/production/dom1_dns_range_1"
+    TF_VAR_dom1_dns_range_2: "/codebuild/pttp-ci-ima-pipeline/production/dom1_dns_range_2"
+    TF_VAR_quantum_dns_range_1: "/codebuild/pttp-ci-ima-pipeline/production/quantum_dns_range_1"
+    TF_VAR_quantum_dns_range_2: "/codebuild/pttp-ci-ima-pipeline/production/quantum_dns_range_2"
+    TF_VAR_quantum_dns_ip_1: "/codebuild/pttp-ci-ima-pipeline/production/quantum_dns_ip_1"
+    TF_VAR_quantum_dns_ip_2: "/codebuild/pttp-ci-ima-pipeline/production/quantum_dns_ip_2"
+    TF_VAR_psn_team_protected_range_1: "/codebuild/pttp-ci-ima-pipeline/$ENV/psn_team_protected_range_1"
+    TF_VAR_psn_team_protected_range_2: "/codebuild/pttp-ci-ima-pipeline/$ENV/psn_team_protected_range_2"
+    TF_VAR_sop_oci_range: "/codebuild/pttp-ci-ima-pipeline/$ENV/sop_oci_range"
+    TF_VAR_corsham_5260_ip: "/codebuild/pttp-ci-ima-pipeline/$ENV/corsham_5260_ip"
+    TF_VAR_farnborough_5260_ip: "/codebuild/pttp-ci-ima-pipeline/$ENV/farnborough_5260_ip"
+    TF_VAR_corsham_mgmt_range: "/codebuild/pttp-ci-ima-pipeline/corsham-network-address"
+    TF_VAR_farnborough_mgmt_range: "/codebuild/pttp-ci-ima-pipeline/farnborough-network-address"
+    TF_VAR_is_eks_enabled: "/codebuild/pttp-ci-ima-pipeline/$ENV/is_eks_enabled"
+phases:
+  install:
+    on-failure: CONTINUE
+    commands:
+      - wget --no-verbose -O terraform.zip https://releases.hashicorp.com/terraform/1.2.6/terraform_1.2.6_linux_amd64.zip
+      - unzip terraform.zip
+      - mv terraform /bin
+
+  build:
+    commands:
+      - export AWS_DEFAULT_REGION=eu-west-2
+      - terraform --version
+      - terraform init -upgrade -no-color --backend-config="key=terraform.$ENV.state"
+      - terraform providers
+      - terraform workspace new $ENV || true
+      - terraform workspace select $ENV
+      - terraform destroy --auto-approve -no-color
